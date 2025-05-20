@@ -1,13 +1,11 @@
-// src/core/animationLoop.js
 import * as THREE from 'three';
 import { scene, camera, renderer } from './scene.js';
 import { zones } from '../maps/mapsLoader.js';
 import { handleHoverState } from '../effects/hoverEffects.js';
 import { rotateMap, updateMouseRotation } from '../utils/rotateMap.js';
-import { updateParticles, createMagicParticles } from '../effects/particles.js';
+import { updateParticles, updateFireflyTargetFromMouse } from '../effects/particles.js';
 import { ambientLight } from './lights.js';
 import { hotspots } from '../maps/hotspots.js';
-
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -19,58 +17,51 @@ document.addEventListener('mousemove', (event) => {
   const mouseX = event.clientX - window.innerWidth / 2;
   const mouseY = event.clientY - window.innerHeight / 2;
   updateMouseRotation(mouseX, mouseY);
+
+  updateFireflyTargetFromMouse(mouse.x, mouse.y, camera);
 });
 
-function animate() {
+function animate(time) {
   requestAnimationFrame(animate);
 
   updateParticles(0.016);
 
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(zones, true);
 
+  const intersects = raycaster.intersectObjects(zones, true);
   const map1 = zones.find(zone => zone.userData.id === 'map1');
   if (map1) rotateMap(map1);
 
   if (intersects.length > 0) {
-  let targetObject = intersects[0].object;
-  while (targetObject && !targetObject.userData.id) {
-    targetObject = targetObject.parent;
-  }
-
-  const validMaps = ['map1', 'map2', 'map3', 'map4', 'map5'];
-
-  if (targetObject && validMaps.includes(targetObject.userData.id)) {
-    handleHoverState(targetObject.userData.id);
-    document.body.style.cursor = 'pointer';
-
-    // ✨ Mostrar partículas mágicas en cualquier mapa válido
-    if (Math.random() < 0.1) {
-      createMagicParticles(intersects[0].point);
+    let targetObject = intersects[0].object;
+    while (targetObject && !targetObject.userData.id) {
+      targetObject = targetObject.parent;
     }
 
+    const validMaps = ['map1', 'map2', 'map3', 'map4', 'map5'];
+
+    if (targetObject && validMaps.includes(targetObject.userData.id)) {
+      handleHoverState(targetObject.userData.id);
+      document.body.style.cursor = 'pointer';
+    } else {
+      handleHoverState(null);
+      document.body.style.cursor = 'default';
+    }
   } else {
     handleHoverState(null);
     document.body.style.cursor = 'default';
   }
-} else {
-  handleHoverState(null);
-  document.body.style.cursor = 'default';
-}
 
-  ambientLight.intensity = ambientLight.intensity = 0.6 + Math.sin(Date.now() * 0.0005) * 0.05;
+  ambientLight.intensity = 0.6 + Math.sin(Date.now() * 0.0005) * 0.05;
 
   renderer.render(scene, camera);
 }
 
 animate();
 
-
-
-// CLIC EN HOTSPOTS
 document.addEventListener('click', () => {
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(hotspots, true); // hotspots debe estar bien importado
+  const intersects = raycaster.intersectObjects(hotspots, true);
 
   if (intersects.length > 0) {
     const clickedHotspot = intersects[0].object;
@@ -92,7 +83,6 @@ document.addEventListener('click', () => {
   }
 });
 
-// CERRAR INFOBOX — espera que el DOM esté listo
 window.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.getElementById('close-info');
   const infoBox = document.getElementById('hotspot-info');
@@ -103,5 +93,3 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-

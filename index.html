@@ -2,14 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Acantha en Valoria</title>
-  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Add Three.js import map - this is crucial -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
-  <canvas></canvas>
-
-  <!-- Tu script principal de Three.js -->
-  <script type="module" src="/src/main.js"></script>
+  <!-- Panel izquierdo con contenido estático -->
+  <div id="left">
+    <h1>Acantha en Valoria</h1>
+    <p>Bienvenido al mundo mágico de Valoria. Explora los diferentes reinos y descubre los secretos ocultos.</p>
+    
+    <h2>Reinos</h2>
+    <ul>
+      <li>Bosque Centelleante</li>
+      <li>Montañas de Cristal</li>
+      <li>Valle de las Sombras</li>
+      <li>Ciudad Flotante</li>
+      <li>Arrecife Luminoso</li>
+    </ul>
+    
+    <h2>Instrucciones</h2>
+    <p>Pasa el cursor sobre las diferentes zonas del mapa para explorar. Haz clic en los puntos brillantes para obtener más información.</p>
+    
+    <div id="region-info">
+      <h3>Región seleccionada: <span id="region-name">Ninguna</span></h3>
+      <p id="region-description">Selecciona una región para ver su descripción.</p>
+    </div>
+  </div>
+  
+  <!-- Panel derecho con el canvas de Three.js -->
+  <div id="right"></div>
+  
+  <!-- Ventana de información para hotspots -->
+  <div id="hotspot-info">
+    <button id="close-info">✕</button>
+    <h2 id="info-title">Título</h2>
+    <p id="info-text">Descripción</p>
+    <img id="info-image" src="" alt="Imagen del lugar">
+  </div>
+  
+  <!-- El script principal con type="module" es clave para que funcionen los imports -->
+  <script type="module" src="src/main.js"></script>
 </body>
 </html>

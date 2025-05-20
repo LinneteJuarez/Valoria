@@ -7,3 +7,4 @@ import './effects/particles.js';
 import './effects/hoverEffects.js';
 import './core/animationLoop.js';
 import './maps/hotspots.js';
+

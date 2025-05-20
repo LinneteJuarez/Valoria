@@ -1,38 +1,52 @@
-// src/maps/mapsLoader.js
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { scene } from '../core/scene';
 
 const loader = new GLTFLoader();
 const zones = [];
+const textureLoader = new THREE.TextureLoader();
+
+// Paleta cálida tipo hoja vieja (sin naranjas brillantes)
+const warmColors = [
+  0xede3d1,
+  0xd6c4a8,
+  0xcbb499,
+  0xa38e74,
+  0x8c7a62,
+  0x74614d,
+];
+
+// Textura de papel manchado
+const paperBumpMap = textureLoader.load('/textures/papel_manchado.jpg');
+paperBumpMap.wrapS = THREE.RepeatWrapping;
+paperBumpMap.wrapT = THREE.RepeatWrapping;
+paperBumpMap.repeat.set(2, 2);
 
 const positions = [
-  [0, 0, 2], // map1
-  [0, 0, 2], // map2
-  [0, 0, 2], // map3
-  [0, 0, 2], // map4
-  [0, 0, 2], // map5
-  [0, 0, 2]  // map6
+  [-80, 150, 100], 
+  [-80, 150, 100], 
+  [-80, 150, 100], 
+  [-80, 150, 100]
 ];
 
 for (let i = 0; i < 4; i++) {
   loader.load(`/models/${i + 1}.glb`, (gltf) => {
     const model = gltf.scene;
-
     model.position.set(...positions[i]);
-
-    const baseColor = 0x4a7c3c;
 
     model.traverse((child) => {
       if (child.isMesh) {
+        const randomColor = warmColors[Math.floor(Math.random() * warmColors.length)];
+
         child.material = new THREE.MeshStandardMaterial({
-          color: baseColor,
-          roughness: 0.9,
-          metalness: 0.1,
-          flatShading: true
+          color: randomColor,
+          roughness: 0.95,
+          metalness: 0.05,
+          flatShading: true,
+          bumpMap: paperBumpMap,
+          bumpScale: 0.6, // Aumentado para que se note más
         });
-        child.userData.originalColor = baseColor;
-        child.userData.hoverColor = 0x3a5f2e; // mismo hover para todos
+
         child.castShadow = true;
         child.receiveShadow = true;
       }
@@ -43,12 +57,6 @@ for (let i = 0; i < 4; i++) {
     zones.push(model);
 
     console.log(`Loaded map${i + 1} at position:`, positions[i]);
-  },
-  (xhr) => {
-    console.log(`Loading map ${i+1}: ${(xhr.loaded / xhr.total * 100).toFixed(0)}%`);
-  },
-  (error) => {
-    console.error(`Error loading map ${i+1}:`, error);
   });
 }
 

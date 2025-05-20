@@ -2,7 +2,6 @@ import { gsap } from 'gsap';
 import { magicLights } from '../core/lights.js';
 import { models } from '../maps/extrasLoader.js';
 import { zones } from '../maps/mapsLoader.js';
-import { createMagicParticles } from './particles.js';
 import { setHovering } from '../utils/rotateMap.js';
 
 // Cache for smoother transitions between hovers
@@ -198,15 +197,7 @@ function animateModels(active) {
         delay: delay
       });
       
-      // Add subtle rotation
-      activeAnimations[`modelRotate${index}`] = gsap.to(model.rotation, {
-        y: model.rotation.y + Math.PI * 0.015,
-        duration: timings.models.rotate + (index * 0.4),
-        yoyo: true,
-        repeat: -1,
-        ease: easings.float,
-        delay: delay
-      });
+
       
       activeAnimations[`modelTimeline${index}`] = modelTimeline;
     } else {

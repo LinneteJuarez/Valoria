@@ -1,6 +1,6 @@
 // src/core/lights.js
 import * as THREE from 'three';
-import { scene } from './scene';
+import { scene } from './scene.js';
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);

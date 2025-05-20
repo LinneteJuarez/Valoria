@@ -1,61 +1,70 @@
-// src/effects/particles.js
 import * as THREE from 'three';
-import { scene } from '../core/scene';
+import { scene } from '../core/scene.js';
 
-const particleGroups = [];
-const particleCount = 80;
-const particleGeometry = new THREE.SphereGeometry(0.5, 8, 8);
+const particleCount = 50;
+const particles = [];
+// Geometría más pequeña para luciérnagas más delicadas
+const particleGeometry = new THREE.SphereGeometry(0.05, 6, 6);
 const particleMaterials = [
-  new THREE.MeshBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.9 }),
-  new THREE.MeshBasicMaterial({ color: 0xff66ff, transparent: true, opacity: 0.9 }),
-  new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.9 })
+  new THREE.MeshBasicMaterial({ color: 0xffff66, transparent: true, opacity: 0.8 }),
+  new THREE.MeshBasicMaterial({ color: 0xffcc33, transparent: true, opacity: 0.8 }),
+  new THREE.MeshBasicMaterial({ color: 0xffee88, transparent: true, opacity: 0.8 }),
 ];
 
-function createMagicParticles(position) {
-  const particleGroup = new THREE.Group();
-  scene.add(particleGroup);
+const particleGroup = new THREE.Group();
+scene.add(particleGroup);
 
-  for (let i = 0; i < particleCount; i++) {
-    const material = particleMaterials[Math.floor(Math.random() * particleMaterials.length)].clone();
-    const particle = new THREE.Mesh(particleGeometry, material);
-    particle.position.copy(position);
-    particle.userData.velocity = new THREE.Vector3(
-      (Math.random() - 0.5) * 0.8,
-      Math.random() * 1.5,
-      (Math.random() - 0.5) * 0.8
-    );
-    particle.userData.lifetime = 1.5 + Math.random() * 1.5;
-    particle.userData.age = 0;
-    particleGroup.add(particle);
-  }
+for (let i = 0; i < particleCount; i++) {
+  const mat = particleMaterials[Math.floor(Math.random() * particleMaterials.length)].clone();
+  const p = new THREE.Mesh(particleGeometry, mat);
+  // Posiciones más dispersas en un rango mayor
+  p.position.set(
+    (Math.random() - 0.5) * 40,  // rango más ancho
+    (Math.random() - 0.5) * 40 + 2,
+    (Math.random() - 0.5) * 40
+  );
+  // Velocidades más lentas para movimientos suaves y calmados
+  p.userData.velocity = new THREE.Vector3(
+    (Math.random() - 0.5) * 0.005,
+    (Math.random() - 0.5) * 0.005,
+    (Math.random() - 0.5) * 0.005
+  );
+  particleGroup.add(p);
+  particles.push(p);
+}
 
-  particleGroups.push(particleGroup);
+let targetPosition = new THREE.Vector3();
 
-  setTimeout(() => {
-    scene.remove(particleGroup);
-    const index = particleGroups.indexOf(particleGroup);
-    if (index > -1) particleGroups.splice(index, 1);
-  }, 3000);
+function updateFireflyTargetFromMouse(mouseX, mouseY, camera) {
+  // Proyectar el mouse en un plano delante de la cámara
+  const vector = new THREE.Vector3(mouseX, mouseY, 0.5);
+  vector.unproject(camera);
+  const dir = vector.sub(camera.position).normalize();
+  const distance = 10; // distancia desde cámara para el target
+  targetPosition.copy(camera.position).add(dir.multiplyScalar(distance));
 }
 
 function updateParticles(delta = 0.016) {
-  particleGroups.forEach(group => {
-    group.children.forEach(particle => {
-      particle.userData.age += delta;
-      particle.position.addScaledVector(particle.userData.velocity, 0.8);
-      particle.userData.velocity.y -= 0.03;
-      particle.userData.velocity.multiplyScalar(0.97);
-      const lifeRatio = particle.userData.age / particle.userData.lifetime;
-      if (lifeRatio > 1) {
-        particle.visible = false;
-      } else {
-        particle.material.opacity = 1 - lifeRatio;
-        particle.scale.setScalar(
-          Math.max(0.2, 1 - lifeRatio) * (0.9 + Math.sin(particle.userData.age * 10) * 0.3)
-        );
-      }
-    });
+  particles.forEach(p => {
+    // Movimiento suave hacia el target con algo de ruido
+    const toTarget = new THREE.Vector3().subVectors(targetPosition, p.position);
+    toTarget.multiplyScalar(0.008); // velocidad hacia target más lenta
+
+    // Movimiento aleatorio muy sutil para efecto mágico
+    const noise = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.003,
+      (Math.random() - 0.5) * 0.003,
+      (Math.random() - 0.5) * 0.003
+    );
+
+    p.userData.velocity.add(toTarget).add(noise);
+    p.userData.velocity.multiplyScalar(0.9); // más fricción para movimientos suaves
+
+    p.position.add(p.userData.velocity);
+
+    // Brillo pulsante sutil
+    p.material.opacity = 0.6 + 0.4 * Math.sin(performance.now() * 0.003 + p.id);
   });
 }
 
-export { createMagicParticles, updateParticles };
+export { updateParticles, updateFireflyTargetFromMouse };

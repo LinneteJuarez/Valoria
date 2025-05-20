@@ -3,7 +3,7 @@ let currentRotationX = 0;
 let currentRotationY = 0;
 let targetRotationX = 0;
 let targetRotationY = 0;
-let hovering = false;
+let hovering = true;
 
 function rotateMap(mapObject) {
   if (!mapObject) return;
