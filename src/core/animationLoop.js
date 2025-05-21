@@ -1,95 +1,76 @@
 import * as THREE from 'three';
 import { scene, camera, renderer } from './scene.js';
-import { zones } from '../maps/mapsLoader.js';
-import { handleHoverState } from '../effects/hoverEffects.js';
-import { rotateMap, updateMouseRotation } from '../utils/rotateMap.js';
-import { updateParticles, updateFireflyTargetFromMouse } from '../effects/particles.js';
-import { ambientLight } from './lights.js';
-import { hotspots } from '../maps/hotspots.js';
 
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
+const particleCount = 50;
+const particles = [];
 
-document.addEventListener('mousemove', (event) => {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+const particleGeometry = new THREE.SphereGeometry(3, 8, 8); // Aumentado para visibilidad
+const particleMaterials = [
+  new THREE.MeshBasicMaterial({ color: 0xffff66, transparent: true, opacity: 0.9 }),
+  new THREE.MeshBasicMaterial({ color: 0xffcc33, transparent: true, opacity: 0.9 }),
+  new THREE.MeshBasicMaterial({ color: 0xffee88, transparent: true, opacity: 0.9 }),
+];
 
-  const mouseX = event.clientX - window.innerWidth / 2;
-  const mouseY = event.clientY - window.innerHeight / 2;
-  updateMouseRotation(mouseX, mouseY);
+const particleGroup = new THREE.Group();
+scene.add(particleGroup);
 
-  updateFireflyTargetFromMouse(mouse.x, mouse.y, camera);
-});
+for (let i = 0; i < particleCount; i++) {
+  const mat = particleMaterials[Math.floor(Math.random() * particleMaterials.length)].clone();
+  const p = new THREE.Mesh(particleGeometry, mat);
 
+  // Posición inicial centrada donde mira la cámara
+  p.position.set(
+    Math.random() * 200 - 50,  // X: -50 a 150
+    Math.random() * 60 + 600,  // Y: 600 a 660
+    Math.random() * 200 + 200  // Z: 200 a 400
+  );
+
+  p.userData.velocity = new THREE.Vector3(
+    (Math.random() - 0.5) * 0.2,
+    (Math.random() - 0.5) * 0.2,
+    (Math.random() - 0.5) * 0.2
+  );
+
+  particleGroup.add(p);
+  particles.push(p);
+}
+
+function updateParticles(delta = 0.016) {
+  const bounds = {
+    xMin: -100,
+    xMax: 200,
+    yMin: 580,
+    yMax: 680,
+    zMin: 150,
+    zMax: 500,
+  };
+
+  particles.forEach(p => {
+    const noise = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.02,
+      (Math.random() - 0.5) * 0.02,
+      (Math.random() - 0.5) * 0.02
+    );
+
+    p.userData.velocity.add(noise);
+    p.userData.velocity.multiplyScalar(0.95);
+    p.position.add(p.userData.velocity);
+
+    // Rebote en los límites
+    if (p.position.x < bounds.xMin || p.position.x > bounds.xMax) p.userData.velocity.x *= -1;
+    if (p.position.y < bounds.yMin || p.position.y > bounds.yMax) p.userData.velocity.y *= -1;
+    if (p.position.z < bounds.zMin || p.position.z > bounds.zMax) p.userData.velocity.z *= -1;
+
+    // Opacidad oscilante
+    p.material.opacity = 0.6 + 0.4 * Math.sin(performance.now() * 0.002 + p.id);
+  });
+}
+
+// Loop de animación
 function animate(time) {
   requestAnimationFrame(animate);
-
-  updateParticles(0.016);
-
-  raycaster.setFromCamera(mouse, camera);
-
-  const intersects = raycaster.intersectObjects(zones, true);
-  const map1 = zones.find(zone => zone.userData.id === 'map1');
-  if (map1) rotateMap(map1);
-
-  if (intersects.length > 0) {
-    let targetObject = intersects[0].object;
-    while (targetObject && !targetObject.userData.id) {
-      targetObject = targetObject.parent;
-    }
-
-    const validMaps = ['map1', 'map2', 'map3', 'map4', 'map5'];
-
-    if (targetObject && validMaps.includes(targetObject.userData.id)) {
-      handleHoverState(targetObject.userData.id);
-      document.body.style.cursor = 'pointer';
-    } else {
-      handleHoverState(null);
-      document.body.style.cursor = 'default';
-    }
-  } else {
-    handleHoverState(null);
-    document.body.style.cursor = 'default';
-  }
-
-  ambientLight.intensity = 0.6 + Math.sin(Date.now() * 0.0005) * 0.05;
-
+  updateParticles(time * 0.001);
   renderer.render(scene, camera);
 }
 
 animate();
-
-document.addEventListener('click', () => {
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(hotspots, true);
-
-  if (intersects.length > 0) {
-    const clickedHotspot = intersects[0].object;
-    const data = hotspotData[clickedHotspot.name];
-
-    if (data) {
-      const infoBox = document.getElementById('hotspot-info');
-      const titleEl = document.getElementById('info-title');
-      const textEl = document.getElementById('info-text');
-      const imageEl = document.getElementById('info-image');
-
-      if (infoBox && titleEl && textEl && imageEl) {
-        titleEl.textContent = data.title;
-        textEl.textContent = data.text;
-        imageEl.src = data.image || '';
-        infoBox.classList.add('visible');
-      }
-    }
-  }
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-  const closeBtn = document.getElementById('close-info');
-  const infoBox = document.getElementById('hotspot-info');
-
-  if (closeBtn && infoBox) {
-    closeBtn.addEventListener('click', () => {
-      infoBox.classList.remove('visible');
-    });
-  }
-});
