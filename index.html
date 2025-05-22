@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Acantha en Valoria</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Add Three.js import map - this is crucial -->
   <script type="importmap">
     {
       "imports": {
@@ -16,41 +15,34 @@
   </script>
 </head>
 <body>
-  <!-- Panel izquierdo con contenido estático -->
+  <!-- Panel izquierdo con contenido -->
   <div id="left">
     <h1>Acantha en Valoria</h1>
     <p>Bienvenido al mundo mágico de Valoria. Explora los diferentes reinos y descubre los secretos ocultos.</p>
-    
-    <h2>Reinos</h2>
-    <ul>
-      <li>Bosque Centelleante</li>
-      <li>Montañas de Cristal</li>
-      <li>Valle de las Sombras</li>
-      <li>Ciudad Flotante</li>
-      <li>Arrecife Luminoso</li>
-    </ul>
-    
+
     <h2>Instrucciones</h2>
     <p>Pasa el cursor sobre las diferentes zonas del mapa para explorar. Haz clic en los puntos brillantes para obtener más información.</p>
-    
+
     <div id="region-info">
-      <h3>Región seleccionada: <span id="region-name">Ninguna</span></h3>
-      <p id="region-description">Selecciona una región para ver su descripción.</p>
+      <h3>Región seleccionada: <strong id="hotspotTitle">ninguna</strong></h3>
+      <p id="hotspotDescription" style="color:#555;"></p>
     </div>
   </div>
-  
-  <!-- Panel derecho con el canvas de Three.js -->
-  <div id="right"></div>
-  
-  <!-- Ventana de información para hotspots -->
+
+  <!-- Panel derecho con canvas de Three.js -->
+  <div id="right">
+    <!-- El canvas será agregado dinámicamente por Three.js -->
+  </div>
+
+  <!-- Ventana emergente de información del hotspot -->
   <div id="hotspot-info">
-    <button id="close-info">✕</button>
+    <button id="close-info" aria-label="Cerrar">✕</button>
     <h2 id="info-title">Título</h2>
     <p id="info-text">Descripción</p>
-    <img id="info-image" src="" alt="Imagen del lugar">
+    <img id="info-image" src="" alt="Imagen del lugar" />
   </div>
-  
-  <!-- El script principal con type="module" es clave para que funcionen los imports -->
+
+  <!-- Script principal -->
   <script type="module" src="src/main.js"></script>
 </body>
 </html>
