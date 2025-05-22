@@ -27,6 +27,49 @@ body {
   position: relative;
 }
 
+/* Improved styling for the region info section */
+#region-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#region-info h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #ffa500;
+}
+
+#hotspotDescription {
+  color: #ccc !important;
+  line-height: 1.6;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+  text-align: justify;
+}
+
+/* Custom scrollbar for the description */
+#hotspotDescription::-webkit-scrollbar {
+  width: 6px;
+}
+
+#hotspotDescription::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+#hotspotDescription::-webkit-scrollbar-thumb {
+  background: rgba(255, 165, 0, 0.6);
+  border-radius: 3px;
+}
+
+#hotspotDescription::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 165, 0, 0.8);
+}
+
 /* Estilos para el infobox de hotspots */
 #hotspot-info {
   position: absolute;
@@ -50,9 +93,20 @@ body {
   right: 10px;
   background: none;
   border: none;
-  color: white;
+  color: #333;
   font-size: 20px;
   cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+#close-info:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 #info-image {

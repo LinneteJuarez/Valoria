@@ -24,8 +24,8 @@ Acantha creció con su madre, quien también era bruja, y le enseñó todo lo qu
   },
   hs2: { 
     title: 'La bruja y la justicia', 
-    text: `Acantha odiaba la injusticia. Como aquella vez en que vio a un ladrón huyendo de la casa de una anciana con las manos llenas de pertenencias ajenas. Furiosa, corrió a su taller, encendió su caldero y comenzó a preparar un conjuro: tres moscas, un gusano, una mano de duende, seis lágrimas de dragón y unas de viejito. Revolvió la mezcla y pronunció en voz alta: “Amenos roberus, neo mano, absentus”.
-Una densa bola de humo se elevó del caldero y, momentos después, un grito de desesperación resonó afuera. Era el ladrón, observando con horror cómo sus manos se encogían hasta quedar del tamaño de un niño. “¡Maldita bruja, ¿qué me hiciste?!”, gritó, mientras Acantha lo observaba desde su ventana con una satisfacción silenciosa. Se sentía toda una heroína. Había impartido justicia, pero, ¿realmente había protegido al pueblo o simplemente impuesto su voluntad?`
+    text: `Acantha odiaba la injusticia. Como aquella vez en que vio a un ladrón huyendo de la casa de una anciana con las manos llenas de pertenencias ajenas. Furiosa, corrió a su taller, encendió su caldero y comenzó a preparar un conjuro: tres moscas, un gusano, una mano de duende, seis lágrimas de dragón y unas de viejito. Revolvió la mezcla y pronunció en voz alta: "Amenos roberus, neo mano, absentus".
+Una densa bola de humo se elevó del caldero y, momentos después, un grito de desesperación resonó afuera. Era el ladrón, observando con horror cómo sus manos se encogían hasta quedar del tamaño de un niño. "¡Maldita bruja, ¿qué me hiciste?!", gritó, mientras Acantha lo observaba desde su ventana con una satisfacción silenciosa. Se sentía toda una heroína. Había impartido justicia, pero, ¿realmente había protegido al pueblo o simplemente impuesto su voluntad?`
   },
   hs3: { 
     title: 'El castigo de la tierra', 
@@ -33,13 +33,13 @@ Una densa bola de humo se elevó del caldero y, momentos después, un grito de d
   },
   hs4: { 
     title: 'La peste de la aldea', 
-    text: `Cayó la noche y el pueblo se sumergió en el silencio, listo para dormir. Pero entonces, una música estridente rompió la tranquilidad. El responsable era Blorgo, la peste de la aldea: un hombre nefasto, asqueroso y maloliente. Grosero con todos, ahuyentaba a las mujeres y los hombres solo le tenían lástima. Blorgo se creía especial y distinto, pero en realidad solo era un incordio. Cuando los aldeanos le pidieron que bajara el volumen, él se limitó a responder con desdén: “Deberían agradecerme, mi gusto musical es demasiado bueno para sus oídos simples y aburridos”.
+    text: `Cayó la noche y el pueblo se sumergió en el silencio, listo para dormir. Pero entonces, una música estridente rompió la tranquilidad. El responsable era Blorgo, la peste de la aldea: un hombre nefasto, asqueroso y maloliente. Grosero con todos, ahuyentaba a las mujeres y los hombres solo le tenían lástima. Blorgo se creía especial y distinto, pero en realidad solo era un incordio. Cuando los aldeanos le pidieron que bajara el volumen, él se limitó a responder con desdén: "Deberían agradecerme, mi gusto musical es demasiado bueno para sus oídos simples y aburridos".
 Acantha no lo soportaba. Blorgo representaba todo lo que ella detestaba. No encajaba en el pueblo, y ella iba a hacer algo al respecto. Pensó en el bienestar de la aldea, pero también en cómo la perturbaba su mera existencia.`
   },
   hs5: { 
     title: 'El hechizo de la maldad', 
     text: `Acantha esperó hasta la madrugada, cuando todos dormían, y comenzó a buscar entre sus libros hasta dar con un tomo de artes oscuras. Ahí encontró un hechizo poderoso, uno que le arrancaría toda la maldad a Blorgo. Pasó días reuniendo los ingredientes: ojos de rana, cinco pétalos de lirio de cala, musgo de pantano y, lo más difícil de conseguir, un pelo de Blorgo. Logró obtenerlo cuando él, tras una noche de embriaguez y alucinaciones causadas por lamer sapos, quedó dormido en la calle.
-Con todos los ingredientes en mano, Acantha encendió su caldero, mezcló los componentes y pronunció las palabras mágicas: “Almonius, laingus, trotofodo, paraba, lito limpa”.
+Con todos los ingredientes en mano, Acantha encendió su caldero, mezcló los componentes y pronunció las palabras mágicas: "Almonius, laingus, trotofodo, paraba, lito limpa".
 Un escalofrío recorrió la cabaña cuando todas las velas se apagaron y la temperatura cayó drásticamente. Entonces, un grito aterrador rasgó la noche. Blorgo se retorció en el suelo mientras una sustancia negra y viscosa brotaba de su boca. Hedía a podredumbre, y su masa informe comenzó a crecer y a tomar forma. La maldad de Blorgo ya no estaba dentro de él… ahora era un monstruo, uno real, enorme y despiadado, que rugió con furia y se lanzó contra el pueblo de Valoria.`
   },
   hs6: { 
@@ -159,7 +159,7 @@ function onClick(event) {
       haloSprites.get(clickedId).visible = false;
       selectedHotspotId = null;
       document.getElementById('hotspotTitle').textContent = 'ninguna';
-      document.getElementById('hotspotText').textContent = '';
+      document.getElementById('hotspotDescription').textContent = ''; // ✅ Fixed ID
     } else {
       if (selectedHotspotId) {
         haloSprites.get(selectedHotspotId).visible = false;
@@ -170,8 +170,8 @@ function onClick(event) {
       const info = hotspotData[clickedId];
       if (info) {
         document.getElementById('hotspotTitle').textContent = info.title;
-        document.getElementById('hotspotText').textContent = info.text;
-        document.getElementById('hotspot-info').classList.add('visible');
+        document.getElementById('hotspotDescription').textContent = info.text; // ✅ Fixed ID
+        // Removed the line that shows the popup window
       }
     }
   }
