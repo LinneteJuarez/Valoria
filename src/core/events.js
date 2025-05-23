@@ -21,7 +21,7 @@ document.addEventListener('mousemove', (event) => {
   mouse.x = normalized.x;
   mouse.y = normalized.y;
 
-  updateFireflyTargetFromMouse(normalized.x, normalized.y, camera);
+
 });
 
 function animate(time) {

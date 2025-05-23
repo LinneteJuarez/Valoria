@@ -8,12 +8,12 @@ const textureLoader = new THREE.TextureLoader();
 
 // Paleta cálida tipo hoja vieja (sin naranjas brillantes)
 const warmColors = [
-  0xede3d1,
-  0xd6c4a8,
-  0xcbb499,
-  0xa38e74,
-  0x8c7a62,
-  0x74614d,
+  0x8B9454,
+  0xA1AA81,
+  0x6C8745,
+  0x869856,
+  0x607656,
+  0x839869,
 ];
 
 // Textura de papel manchado

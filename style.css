@@ -1,8 +1,8 @@
 body {
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: url('/textures/map.jpg') no-repeat center center fixed;
   background-size: cover;
@@ -11,20 +11,43 @@ body {
 }
 
 #left {
-  width: 700px;
+  width: 40%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
-  color: white;
+  color: rgb(255, 255, 255);
   padding: 20px;
   box-sizing: border-box;
   flex-shrink: 0;
   overflow-y: auto;
 }
 
+#titulo{
+   font-family: "Fleur De Leah", cursive;
+   font-weight: 300;
+   font-size:80px;
+   align-content: center;
+   color: #eab045;
+  } 
+
+#texto{
+   font-family: "Texturina", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 30PX;
+}
+
+
 #right {
   flex-grow: 1;
   height: 100vh;
   position: relative;
+}
+
+#sub{
+ font-family: "Texturina", serif;
+font-size: 50px;
+font-optical-sizing: auto;
+font-style: normal;
 }
 
 /* Improved styling for the region info section */
@@ -39,7 +62,10 @@ body {
 #region-info h3 {
   margin-top: 0;
   margin-bottom: 10px;
-  color: #ffa500;
+  color: #eab045;
+  font-family: "Fleur De Leah", cursive;
+  font-weight: 300;
+  font-size:70px;
 }
 
 #hotspotDescription {
@@ -49,6 +75,10 @@ body {
   overflow-y: auto;
   padding-right: 10px;
   text-align: justify;
+  font-family: "Texturina", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 30px;
 }
 
 /* Custom scrollbar for the description */
@@ -76,7 +106,7 @@ body {
   top: 20px;
   left: 20px;
   max-width: 300px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(41, 40, 30, 0.95);
   padding: 20px;
   border-radius: 12px;
   display: none;
@@ -113,3 +143,4 @@ body {
   max-width: 100%;
   margin-top: 10px;
 }
+

@@ -8,11 +8,11 @@ scene.add(hotspotGroup);
 // Posiciones distribuidas sobre mapas 1 a 4
 const hotspotPositions = [
   { id: 'hs1', position: new THREE.Vector3(-150, 305, -50) },
-  { id: 'hs2', position: new THREE.Vector3(-160, 305, 60) },
-  { id: 'hs3', position: new THREE.Vector3(100, 305, 250) },
-  { id: 'hs4', position: new THREE.Vector3(-60, 305, 150) },
-  { id: 'hs5', position: new THREE.Vector3(-60, 305, 250) },
-  { id: 'hs6', position: new THREE.Vector3(20, 305, 100) }
+  { id: 'hs2', position: new THREE.Vector3(-160, 305, 160) },
+  { id: 'hs3', position: new THREE.Vector3(100, 305, 350) },
+  { id: 'hs4', position: new THREE.Vector3(-60, 305, 250) },
+  { id: 'hs5', position: new THREE.Vector3(-60, 305, 350) },
+  { id: 'hs6', position: new THREE.Vector3(20, 305, 200) }
 ];
 
 // Información asociada a cada hotspot con tus textos completos
@@ -154,12 +154,15 @@ function onClick(event) {
     const clicked = intersects[0].object;
     const clickedId = clicked.name;
 
+    // **Aquí agregas la llamada al sonido**
+    playClickSound();
+
     // Mostrar / ocultar halo e info
     if (selectedHotspotId === clickedId) {
       haloSprites.get(clickedId).visible = false;
       selectedHotspotId = null;
       document.getElementById('hotspotTitle').textContent = 'ninguna';
-      document.getElementById('hotspotDescription').textContent = ''; // ✅ Fixed ID
+      document.getElementById('hotspotDescription').textContent = '';
     } else {
       if (selectedHotspotId) {
         haloSprites.get(selectedHotspotId).visible = false;
@@ -170,12 +173,12 @@ function onClick(event) {
       const info = hotspotData[clickedId];
       if (info) {
         document.getElementById('hotspotTitle').textContent = info.title;
-        document.getElementById('hotspotDescription').textContent = info.text; // ✅ Fixed ID
-        // Removed the line that shows the popup window
+        document.getElementById('hotspotDescription').textContent = info.text;
       }
     }
   }
 }
+
 
 // Cerrar caja de info
 document.getElementById('close-info').addEventListener('click', () => {
@@ -190,3 +193,9 @@ document.getElementById('close-info').addEventListener('click', () => {
 document.getElementById('right').addEventListener('click', onClick);
 
 export { hotspots, hotspotData };
+
+import { initClickSound, playClickSound } from '/src/audio/soundEffect.js'; // o donde tengas la función
+
+// Luego de inicializar el audio principal
+initClickSound(camera);
+
