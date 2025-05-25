@@ -1,6 +1,5 @@
-// src/core/events.js
 import * as THREE from 'three';
-import { camera, renderer, scene } from './scene.js';
+import { camera, renderer, scene, rotationGroup } from './scene.js'; // Importa rotationGroup
 import { handleHoverState } from '../effects/hoverEffects.js';
 import { zones } from '../maps/mapsLoader.js';
 
@@ -15,14 +14,46 @@ function getNormalizedMousePosition(event, canvas) {
   };
 }
 
+// Para raycasting y hover
 document.addEventListener('mousemove', (event) => {
   const normalized = getNormalizedMousePosition(event, renderer.domElement);
   
   mouse.x = normalized.x;
   mouse.y = normalized.y;
-
-
 });
+
+// Variables para rotación drag
+let isDragging = false;
+let previousMouseX = 0;
+
+function onMouseDown(event) {
+  isDragging = true;
+  previousMouseX = event.clientX;
+  document.body.style.cursor = 'grabbing';
+}
+
+function onMouseMove(event) {
+  if (!isDragging) return;
+
+  const deltaX = event.clientX - previousMouseX;
+  previousMouseX = event.clientX;
+
+  const rotationSpeed = 0.005; // Ajusta la sensibilidad aquí
+
+  // Rota el grupo sobre Y
+  rotationGroup.rotation.y -= deltaX * rotationSpeed;
+}
+
+function onMouseUp() {
+  isDragging = false;
+  document.body.style.cursor = 'default';
+}
+
+// Event listeners para drag-rotate sobre el canvas de Three.js
+renderer.domElement.addEventListener('mousedown', onMouseDown);
+renderer.domElement.addEventListener('mousemove', onMouseMove);
+renderer.domElement.addEventListener('mouseup', onMouseUp);
+renderer.domElement.addEventListener('mouseleave', onMouseUp);
 
 function animate(time) {
   requestAnimationFrame(animate);
@@ -41,14 +72,14 @@ function animate(time) {
 
     if (targetObject && validMaps.includes(targetObject.userData.id)) {
       handleHoverState(targetObject.userData.id);
-      document.body.style.cursor = 'pointer';
+      document.body.style.cursor = isDragging ? 'grabbing' : 'pointer';
     } else {
       handleHoverState(null);
-      document.body.style.cursor = 'default';
+      if (!isDragging) document.body.style.cursor = 'default';
     }
   } else {
     handleHoverState(null);
-    document.body.style.cursor = 'default';
+    if (!isDragging) document.body.style.cursor = 'default';
   }
 
   renderer.render(scene, camera);

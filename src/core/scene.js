@@ -7,17 +7,22 @@ const container = document.getElementById('right'); // This might be null if DOM
 const scene = new THREE.Scene();
 scene.background = null;
 
+// 🔄 Creamos el grupo que va a rotar todo
+const rotationGroup = new THREE.Group();
+scene.add(rotationGroup); // lo agregamos a la escena
+
 const camera = new THREE.PerspectiveCamera(
   60,
   container ? container.clientWidth / container.clientHeight : window.innerWidth / window.innerHeight,
   0.1,
   5000
 );
-camera.position.set(0, 550, 450);
+camera.position.set(0, 750, 350);
 camera.lookAt(50, 0, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setClearColor(0x000000, 0);  // Negro con 0 de opacidad (transparente)
+
 // Initialize with fallback values in case container isn't ready
 renderer.setSize(
   container ? container.clientWidth : window.innerWidth, 
@@ -63,4 +68,5 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
   setTimeout(initRenderer, 0);
 }
 
-export { scene, camera, renderer };
+// 👇 Exportamos también el grupo de rotación
+export { scene, camera, renderer, rotationGroup };

@@ -1,18 +1,18 @@
 import * as THREE from 'three'; 
-import { scene, camera, renderer } from '../core/scene.js';  // Importa cámara y renderer para raycaster
+import { scene, camera, renderer, rotationGroup } from '../core/scene.js';
 import gsap from 'gsap';
 
 const hotspotGroup = new THREE.Group();
-scene.add(hotspotGroup);
+rotationGroup.add(hotspotGroup);
 
 // Posiciones distribuidas sobre mapas 1 a 4
 const hotspotPositions = [
-  { id: 'hs1', position: new THREE.Vector3(-150, 305, -50) },
-  { id: 'hs2', position: new THREE.Vector3(-160, 305, 160) },
-  { id: 'hs3', position: new THREE.Vector3(100, 305, 350) },
-  { id: 'hs4', position: new THREE.Vector3(-60, 305, 250) },
-  { id: 'hs5', position: new THREE.Vector3(-60, 305, 350) },
-  { id: 'hs6', position: new THREE.Vector3(20, 305, 200) }
+  { id: 'hs1', position: new THREE.Vector3( 10, 305, -20) },
+  { id: 'hs2', position: new THREE.Vector3(90, 255, 120) },
+  { id: 'hs3', position: new THREE.Vector3(-40, 205, -60) },
+  { id: 'hs4', position: new THREE.Vector3(160, 295, 30) },
+  { id: 'hs5', position: new THREE.Vector3(90, 245, 250) },
+  { id: 'hs6', position: new THREE.Vector3(-110, 300, -170) }
 ];
 
 // Información asociada a cada hotspot con tus textos completos
@@ -52,7 +52,7 @@ Desde ese día, Acantha cambió. Siguió protegiendo Valoria, pero con una nueva
 };
 
 const hotspotMaterial = new THREE.MeshStandardMaterial({
-  color: 0xA0522D,
+  color: 0xeab045,
   emissive: 0x7B3F00,
   emissiveIntensity: 0.5,
   roughness: 0.7,
@@ -72,9 +72,9 @@ function createHaloTexture() {
   const ctx = canvas.getContext('2d');
 
   const gradient = ctx.createRadialGradient(size/2, size/2, 10, size/2, size/2, size/2);
-  gradient.addColorStop(0, 'rgba(255, 165, 0, 0.9)');
-  gradient.addColorStop(0.5, 'rgba(255, 165, 0, 0.4)');
-  gradient.addColorStop(1, 'rgba(255, 165, 0, 0)');
+  gradient.addColorStop(0, 'rgba(213, 146, 21, 0.9)');
+  gradient.addColorStop(0.5, 'rgba(186, 134, 37, 0.97)');
+  gradient.addColorStop(1, 'rgba(119, 77, 0, 0)');
 
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, size, size);

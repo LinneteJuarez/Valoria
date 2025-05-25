@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { scene } from '../core/scene';
+import { rotationGroup } from '../core/scene.js'; // ⬅️ Importar el grupo desde core
 
 const loader = new GLTFLoader();
 const zones = [];
@@ -22,11 +22,12 @@ paperBumpMap.wrapS = THREE.RepeatWrapping;
 paperBumpMap.wrapT = THREE.RepeatWrapping;
 paperBumpMap.repeat.set(2, 2);
 
+// Posiciones (las puedes personalizar más adelante si necesitas que estén en diferentes lugares)
 const positions = [
-  [-80, 150, 100], 
-  [-80, 150, 100], 
-  [-80, 150, 100], 
-  [-80, 150, 100]
+  [0, 150, 100],
+  [0, 150, 100],
+  [0, 150, 100],
+  [0, 150, 100]
 ];
 
 for (let i = 0; i < 4; i++) {
@@ -44,7 +45,7 @@ for (let i = 0; i < 4; i++) {
           metalness: 0.05,
           flatShading: true,
           bumpMap: paperBumpMap,
-          bumpScale: 0.6, // Aumentado para que se note más
+          bumpScale: 0.6,
         });
 
         child.castShadow = true;
@@ -53,7 +54,7 @@ for (let i = 0; i < 4; i++) {
     });
 
     model.userData.id = `map${i + 1}`;
-    scene.add(model);
+    rotationGroup.add(model); // ⬅️ Añadido al rotationGroup en lugar de scene directamente
     zones.push(model);
 
     console.log(`Loaded map${i + 1} at position:`, positions[i]);
