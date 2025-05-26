@@ -41,7 +41,7 @@ function onMouseMove(event) {
   const rotationSpeed = 0.005; // Ajusta la sensibilidad aquí
 
   // Rota el grupo sobre Y
-  rotationGroup.rotation.y -= deltaX * rotationSpeed;
+  rotationGroup.rotation.y += deltaX * rotationSpeed;
 }
 
 function onMouseUp() {

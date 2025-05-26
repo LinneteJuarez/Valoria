@@ -1,65 +1,42 @@
 import * as THREE from 'three';
 import { scene } from '../core/scene.js';
 
-const particleCount = 50;
-const particles = [];
+const rightContainer = document.getElementById('right');
 
-const particleGeometry = new THREE.SphereGeometry(0.1, 6, 6);
+rightContainer.addEventListener('mousemove', function(e) {
+  // Obtener la posición relativa del mouse dentro del contenedor #right
+  const rect = rightContainer.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
 
-const particleMaterials = [
-  new THREE.MeshBasicMaterial({ color: 0xffff66, transparent: true, opacity: 0.8 }),
-  new THREE.MeshBasicMaterial({ color: 0xffcc33, transparent: true, opacity: 0.8 }),
-  new THREE.MeshBasicMaterial({ color: 0xffee88, transparent: true, opacity: 0.8 }),
-];
+  for (let i = 0; i < 3; i++) {
+    const star = document.createElement('div');
+    star.classList.add('trail-star');
 
-const particleGroup = new THREE.Group();
-scene.add(particleGroup);
+    const offsetX = (Math.random() - 0.5) * 30;
+    const offsetY = (Math.random() - 0.5) * 30;
 
-for (let i = 0; i < particleCount; i++) {
-  const mat = particleMaterials[Math.floor(Math.random() * particleMaterials.length)].clone();
-  const p = new THREE.Mesh(particleGeometry, mat);
+    const size = Math.random() * 4 + 2;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
 
-p.position.set(
-  (Math.random() - 0.5) * 200,   // ancho X
-  (Math.random() - 0.5) * 80 + 300, // altura Y centrada en 300 (o la altura de tu mapa)
-  (Math.random() - 0.5) * 200    // profundidad Z
-);
-  p.userData.velocity = new THREE.Vector3(
-    (Math.random() - 0.5) * 0.005,
-    (Math.random() - 0.5) * 0.005,
-    (Math.random() - 0.5) * 0.005
-  );
-  particleGroup.add(p);
-  particles.push(p);
-}
+    const colors = ['#ffffff', '#ffe0f7', '#ccffff', '#ffd6f6'];
+    star.style.background = colors[Math.floor(Math.random() * colors.length)];
 
-let targetPosition = new THREE.Vector3();
+    // Ubicar dentro del contenedor #right
+    star.style.left = `${mouseX + offsetX}px`;
+    star.style.top = `${mouseY + offsetY}px`;
 
-/**
- * Proyecta las coordenadas del mouse (normalizadas al canvas) hacia el espacio 3D.
- * @param {number} mouseX - Coordenada X normalizada en [-1, 1]
- * @param {number} mouseY - Coordenada Y normalizada en [-1, 1]
- * @param {THREE.Camera} camera 
- */
+    rightContainer.appendChild(star);
 
+    // Transición y remoción
+    requestAnimationFrame(() => {
+      star.style.transform = `translateY(-10px) scale(0.5)`;
+      star.style.opacity = '0';
+    });
 
-function updateParticles(delta = 0.016) {
-  particles.forEach(p => {
-    const toTarget = new THREE.Vector3().subVectors(targetPosition, p.position);
-    toTarget.multiplyScalar(0.008);
-
-    const noise = new THREE.Vector3(
-      (Math.random() - 0.5) * 0.003,
-      (Math.random() - 0.5) * 0.003,
-      (Math.random() - 0.5) * 0.003
-    );
-
-    p.userData.velocity.add(toTarget).add(noise);
-    p.userData.velocity.multiplyScalar(0.9);
-    p.position.add(p.userData.velocity);
-
-    p.material.opacity = 0.6 + 0.4 * Math.sin(performance.now() * 0.003 + p.id);
-  });
-}
-
-export { updateParticles};
+    setTimeout(() => {
+      star.remove();
+    }, 1000);
+  }
+});

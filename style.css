@@ -144,3 +144,51 @@ font-style: normal;
   margin-top: 10px;
 }
 
+.trail-star {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 9999;
+    opacity: 0.8;
+    box-shadow: rgba(255, 165, 0, 0.6);
+    transition: transform 1s ease-out, opacity 1s ease-out;
+  }
+
+  #loading-screen {
+  position: fixed;
+  inset: 0;
+  background: #1a1a1a;
+  color: #fefae0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 10000;
+  font-family: "Fleur De Leah", cursive;
+  font-weight: 300;
+  font-size:70px;
+  transition: opacity 1s ease;
+}
+
+.loading-bar {
+  width: 60%;
+  height: 8px;
+  background: #444;
+  margin-top: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ffd6f6, #ffe0f7, #ffffff);
+  animation: loadingFill 3s ease-out forwards;
+}
+
+@keyframes loadingFill {
+  to {
+    width: 100%;
+  }
+}
+

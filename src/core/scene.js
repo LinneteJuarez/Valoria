@@ -70,3 +70,32 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 
 // 👇 Exportamos también el grupo de rotación
 export { scene, camera, renderer, rotationGroup };
+
+
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+// Loaders con loadingManager
+const loadingManager = new THREE.LoadingManager();
+
+loadingManager.onLoad = () => {
+  console.log("¡Todo ha cargado!");
+  const loadingScreen = document.getElementById('loading-screen');
+  loadingScreen.style.transition = 'opacity 10s ease'; // transición más lenta
+  loadingScreen.style.opacity = '0';
+  loadingScreen.style.pointerEvents = 'none';
+
+  setTimeout(() => {
+    loadingScreen.remove();
+  }, 3500); // espera 3.5 segundos antes de remover
+};
+
+
+const gltfLoader = new GLTFLoader(loadingManager);
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const audioLoader = new THREE.AudioLoader(loadingManager);
+
+// Cargar el mapa
+gltfLoader.load('models/map.glb', (gltf) => {
+  rotationGroup.add(gltf.scene); // Agregar al grupo de rotación si quieres que rote
+});
+
